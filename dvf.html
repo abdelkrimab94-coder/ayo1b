@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Ayoub Clothing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root{
+      --cream:#f7f3ed;--dark:#1c1c1c;--accent:#b8864e;--accent2:#8b5e34;
+      --accent-light:#f0e4d4;--gray:#6b6b6b;--light:#faf8f5;--border:#e8e0d5;
+      --success:#2d7a4f;--danger:#c0392b;--white:#ffffff;--warn:#d97706;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh}
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-track{background:var(--cream)}
+    ::-webkit-scrollbar-thumb{background:var(--accent)}
+
+    /* ── SIDEBAR ── */
+    .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+    .sidebar{background:var(--dark);color:var(--cream);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+    .sb-logo{padding:28px 24px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .sb-logo .logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;letter-spacing:3px;text-transform:uppercase}
+    .sb-logo .logo em{color:var(--accent);font-style:normal}
+    .sb-logo p{font-size:10px;letter-spacing:3px;text-transform:uppercase;opacity:.4;margin-top:4px}
+    .sb-nav{flex:1;padding:16px 0}
+    .sb-section{font-size:9px;letter-spacing:4px;text-transform:uppercase;opacity:.35;padding:16px 24px 8px}
+    .sb-link{display:flex;align-items:center;gap:12px;padding:13px 24px;font-size:12px;letter-spacing:1px;cursor:pointer;transition:background .2s,color .2s;border:none;background:none;color:rgba(255,255,255,.65);width:100%;text-align:left;font-family:'Inter',sans-serif;font-weight:500}
+    .sb-link i{width:18px;text-align:center;font-size:14px;flex-shrink:0}
+    .sb-link:hover{background:rgba(255,255,255,.06);color:#fff}
+    .sb-link.on{background:rgba(184,134,78,.18);color:var(--accent);border-right:2px solid var(--accent)}
+    .sb-link .badge{margin-left:auto;background:var(--accent);color:#fff;border-radius:10px;padding:2px 8px;font-size:9px;font-weight:700}
+    .sb-link .badge.red{background:var(--danger)}
+    .sb-bottom{padding:20px 24px;border-top:1px solid rgba(255,255,255,.08)}
+    .sb-back{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.5);font-size:12px;letter-spacing:1px;text-decoration:none;transition:color .3s;cursor:pointer;background:none;border:none;font-family:'Inter',sans-serif;width:100%}
+    .sb-back:hover{color:var(--accent)}
+
+    /* ── TOPBAR ── */
+    .main-area{display:flex;flex-direction:column;overflow:hidden}
+    .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 36px;height:64px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:100}
+    .topbar-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;text-transform:uppercase}
+    .topbar-title em{color:var(--accent);font-style:italic}
+    .topbar-actions{display:flex;align-items:center;gap:12px}
+    .t-btn{background:var(--dark);color:#fff;border:none;padding:10px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;transition:background .3s;display:flex;align-items:center;gap:8px}
+    .t-btn:hover{background:var(--accent)}
+    .t-btn.outline{background:transparent;color:var(--dark);border:1.5px solid var(--border)}
+    .t-btn.outline:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
+
+    /* ── PANELS ── */
+    .content{flex:1;overflow-y:auto;padding:32px 36px}
+    .panel{display:none}
+    .panel.on{display:block}
+
+    /* ── CARDS / SECTIONS ── */
+    .card{background:var(--white);border:1px solid var(--border);padding:28px;margin-bottom:24px}
+    .card-title{font-size:11px;letter-spacing:4px;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+    .card-title i{font-size:14px}
+
+    /* ── FORM ── */
+    .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .f-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+    .f-grp{display:flex;flex-direction:column;gap:6px}
+    .f-grp.full{grid-column:1/-1}
+    .f-grp label{font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:700;color:var(--gray)}
+    .f-grp input,.f-grp select,.f-grp textarea{border:1.5px solid var(--border);padding:12px 14px;font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .3s;background:var(--white);color:var(--dark);width:100%}
+    .f-grp input:focus,.f-grp select:focus,.f-grp textarea:focus{border-color:var(--accent)}
+    .f-grp textarea{min-height:90px;resize:vertical}
+    .f-grp input[type=color]{height:44px;padding:4px;cursor:pointer}
+    .f-grp input[type=number]{-moz-appearance:textfield}
+    .f-hint{font-size:11px;color:var(--gray);margin-top:4px;line-height:1.5}
+
+    /* ── BUTTONS ── */
+    .btn{border:none;padding:13px 28px;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;transition:all .3s;display:inline-flex;align-items:center;gap:8px}
+    .btn-dark{background:var(--dark);color:#fff}
+    .btn-dark:hover{background:var(--accent)}
+    .btn-accent{background:var(--accent);color:#fff}
+    .btn-accent:hover{background:var(--accent2)}
+    .btn-danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}
+    .btn-danger:hover{background:var(--danger);color:#fff}
+    .btn-ghost{background:transparent;color:var(--dark);border:1.5px solid var(--border)}
+    .btn-ghost:hover{background:var(--dark);color:#fff}
+    .btn-sm{padding:8px 16px;font-size:10px;letter-spacing:2px}
+    .btn-xs{padding:6px 12px;font-size:9px;letter-spacing:1.5px}
+    .saved-msg{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--success);display:none;margin-top:10px}
+    .saved-msg.show{display:inline-flex;align-items:center;gap:6px}
+
+    /* ── PRODUCT GRID (admin) ── */
+    .prod-admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:8px}
+    .pad-card{background:var(--light);border:1.5px solid var(--border);position:relative;transition:border-color .3s}
+    .pad-card:hover{border-color:var(--accent)}
+    .pad-card.hidden-prod{opacity:.5;border-style:dashed}
+    .pad-card.sold-prod{border-color:var(--danger)}
+    .pad-img{position:relative;aspect-ratio:3/4;overflow:hidden;background:#eee}
+    .pad-img img{width:100%;height:100%;object-fit:cover}
+    .pad-status{position:absolute;top:8px;left:8px;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;font-weight:700}
+    .st-active{background:var(--success);color:#fff}
+    .st-hidden{background:var(--warn);color:#fff}
+    .st-sold{background:var(--danger);color:#fff}
+    .pad-info{padding:12px}
+    .pad-name{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;line-height:1.3}
+    .pad-meta{font-size:11px;color:var(--gray);margin-bottom:4px}
+    .pad-price{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--accent);margin-bottom:10px}
+    .pad-size-chip{display:inline-block;border:1px solid var(--border);padding:3px 8px;font-size:10px;letter-spacing:1px;margin:2px;background:var(--white)}
+    .pad-actions{display:flex;gap:6px;flex-wrap:wrap}
+
+    /* ── SIZES MANAGER ── */
+    .size-chips-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;padding:12px;border:1.5px solid var(--border);background:var(--light);min-height:52px}
+    .size-chip{display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1.5px solid var(--border);padding:6px 12px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:default}
+    .size-chip .rm{background:none;border:none;cursor:pointer;color:var(--gray);font-size:12px;transition:color .2s;padding:0;line-height:1}
+    .size-chip .rm:hover{color:var(--danger)}
+    .size-chip.used{border-color:var(--accent);color:var(--accent)}
+    .add-size-row{display:flex;gap:8px;margin-top:10px}
+    .add-size-row input{flex:1;border:1.5px solid var(--border);padding:10px 12px;font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .3s}
+    .add-size-row input:focus{border-color:var(--accent)}
+
+    /* ── CATEGORIES MANAGER ── */
+    .cat-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border:1px solid var(--border);background:var(--light);margin-bottom:8px}
+    .cat-item-name{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+    .cat-item-count{font-size:11px;color:var(--gray)}
+
+    /* ── CODE BLOCK ── */
+    .code-block{background:#0f1117;color:#7ee787;padding:20px;font-size:11px;line-height:1.8;overflow-x:auto;font-family:monospace;position:relative;margin-top:12px}
+    .code-copy{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.1);border:none;color:#fff;padding:6px 12px;font-size:10px;letter-spacing:2px;cursor:pointer;font-family:'Inter',sans-serif;transition:background .3s}
+    .code-copy:hover{background:var(--accent)}
+
+    /* ── STEPS ── */
+    .gs-steps{counter-reset:step}
+    .gs-step{display:grid;grid-template-columns:36px 1fr;gap:16px;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+    .gs-step:last-child{border-bottom:none;margin-bottom:0}
+    .gs-step-n{width:36px;height:36px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+    .gs-step-body h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+    .gs-step-body p{font-size:13px;color:var(--gray);line-height:1.8}
+    .gs-step-body code{background:var(--light);border:1px solid var(--border);padding:2px 6px;font-size:11px;font-family:monospace;color:var(--accent2)}
+
+    /* ── PALETTES ── */
+    .palettes{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+    .pal-btn{padding:10px 20px;border:2px solid;background:transparent;cursor:pointer;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;font-family:'Inter',sans-serif;transition:all .2s}
+    .pal-btn:hover{transform:translateY(-2px)}
+
+    /* ── STATUS ── */
+    .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+    .dot-green{background:var(--success)}
+    .dot-red{background:var(--danger)}
+    .dot-gray{background:var(--gray)}
+
+    /* ── UPLOAD ── */
+    .upload-zone{border:2px dashed var(--border);padding:28px;text-align:center;cursor:pointer;transition:all .3s;position:relative;background:var(--light)}
+    .upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-light)}
+    .upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+    .upload-zone i{font-size:32px;color:var(--accent);display:block;margin-bottom:10px}
+    .upload-zone p{font-size:12px;color:var(--gray)}
+    .upload-preview{margin-top:12px;display:none}
+    .upload-preview img{max-height:200px;max-width:100%;object-fit:contain;border:2px solid var(--accent)}
+    .upload-progress{height:4px;background:var(--border);margin-top:8px;display:none}
+    .upload-progress-bar{height:100%;background:var(--accent);transition:width .3s;width:0}
+
+    /* ── DRIVE LINK ── */
+    .drive-box{background:var(--light);border:1px solid var(--border);padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:16px}
+    .drive-box i{font-size:28px;color:#4285f4}
+    .drive-box p{font-size:13px;color:var(--gray);line-height:1.6}
+    .drive-box strong{color:var(--dark)}
+
+    /* ── SHEETS PREVIEW ── */
+    .sheet-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}
+    .sheet-table th{background:var(--dark);color:#fff;padding:10px 12px;text-align:left;font-size:9px;letter-spacing:3px;text-transform:uppercase;font-weight:700}
+    .sheet-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--gray)}
+    .sheet-table tr:last-child td{border-bottom:none}
+    .sheet-tab{display:inline-block;background:var(--accent);color:#fff;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;margin:4px;cursor:pointer;border:none;font-family:'Inter',sans-serif;font-weight:700}
+    .sheet-tab.on{background:var(--dark)}
+    .sheet-tab-inactive{background:var(--border);color:var(--gray)}
+
+    /* ── TOAST ── */
+    #toast{position:fixed;bottom:28px;left:28px;background:var(--dark);color:#fff;padding:13px 26px;font-size:12px;letter-spacing:1.5px;z-index:9999;opacity:0;transform:translateY(16px);transition:all .4s;pointer-events:none;max-width:360px}
+    #toast.show{opacity:1;transform:translateY(0)}
+
+    /* ── SPINNER ── */
+    .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle}
+    @keyframes sp{to{transform:rotate(360deg)}}
+
+    /* ── MODAL ── */
+    #modalBg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+    #modalBg.open{display:flex}
+    .modal{background:var(--white);width:100%;max-width:620px;max-height:90vh;overflow-y:auto;position:relative;animation:popIn .3s ease}
+    @keyframes popIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+    .modal-head{padding:24px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:10}
+    .modal-head h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;text-transform:uppercase}
+    .modal-x{background:none;border:none;font-size:20px;cursor:pointer;color:var(--dark);transition:color .3s}
+    .modal-x:hover{color:var(--danger)}
+    .modal-body{padding:28px}
+
+    /* ── MOBILE ── */
+    .mob-sb-btn{display:none;position:fixed;bottom:20px;right:20px;z-index:500;background:var(--accent);color:#fff;border:none;width:50px;height:50px;border-radius:50%;font-size:20px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+    @media(max-width:900px){
+      .layout{grid-template-columns:1fr}
+      .sidebar{display:none;position:fixed;inset:0;z-index:800;width:280px}
+      .sidebar.mob-open{display:flex}
+      .mob-sb-btn{display:flex;align-items:center;justify-content:center}
+      .content{padding:20px 16px}
+      .topbar{padding:0 20px}
+      .f-grid,.f-grid-3{grid-template-columns:1fr}
+      .f-grp.full{grid-column:span 1}
+    }
+
+    /* ── LOCK SCREEN ── */
+    #adminLock{
+      position:fixed;inset:0;z-index:100000;background:var(--dark);
+      display:flex;align-items:center;justify-content:center;padding:24px;
+    }
+    #adminLock.unlocked{display:none}
+    .lock-box{
+      background:var(--white);width:100%;max-width:400px;padding:40px 36px;
+      border:1px solid var(--border);text-align:center;
+    }
+    .lock-box .lock-logo{
+      font-family:'Playfair Display',serif;font-size:22px;font-weight:900;
+      letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;
+    }
+    .lock-box .lock-logo em{color:var(--accent);font-style:normal}
+    .lock-box .lock-sub{
+      font-size:10px;letter-spacing:3px;text-transform:uppercase;
+      color:var(--gray);margin-bottom:28px;
+    }
+    .lock-box .lock-icon{
+      width:56px;height:56px;margin:0 auto 20px;background:var(--accent-light);
+      border-radius:50%;display:flex;align-items:center;justify-content:center;
+      color:var(--accent);font-size:22px;
+    }
+    .lock-box label{
+      display:block;font-size:10px;letter-spacing:3px;text-transform:uppercase;
+      font-weight:700;color:var(--gray);margin-bottom:8px;text-align:left;
+    }
+    .lock-box input{
+      width:100%;border:1.5px solid var(--border);padding:14px 16px;
+      font-family:'Inter',sans-serif;font-size:18px;letter-spacing:8px;
+      text-align:center;outline:none;transition:border-color .3s;
+      background:var(--light);color:var(--dark);
+    }
+    .lock-box input:focus{border-color:var(--accent)}
+    .lock-box .lock-err{
+      font-size:12px;color:var(--danger);margin-top:10px;min-height:18px;
+      font-weight:600;letter-spacing:1px;
+    }
+    .lock-box .btn{width:100%;justify-content:center;margin-top:16px}
+    body.locked .layout,body.locked .mob-sb-btn{visibility:hidden;pointer-events:none}
+  </style>
+</head>
+<body class="locked">
+
+<!-- ─── LOCK SCREEN ─── -->
+<div id="adminLock">
+  <div class="lock-box">
+    <div class="lock-logo">Ayoub <em>Clothing</em></div>
+    <div class="lock-sub">Administration</div>
+    <div class="lock-icon"><i class="fas fa-lock"></i></div>
+    <label for="adminCode">Code d'accès</label>
+    <input type="password" id="adminCode" inputmode="numeric" maxlength="12" autocomplete="off" placeholder="••••••" autofocus/>
+    <div class="lock-err" id="lockErr"></div>
+    <button class="btn btn-dark" onclick="tryUnlock()"><i class="fas fa-unlock"></i> Entrer</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="logo">Ayoub <em>Clothing</em></div>
+      <p>Administration</p>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section">Catalogue</div>
+      <button class="sb-link on" onclick="showPanel('products',this)"><i class="fas fa-tshirt"></i> Produits <span class="badge" id="sbProdCount">0</span></button>
+      <button class="sb-link" onclick="showPanel('categories',this)"><i class="fas fa-tags"></i> Catégories</button>
+      <button class="sb-link" onclick="showPanel('sizes',this)"><i class="fas fa-ruler"></i> Tailles</button>
+      <div class="sb-section">Commandes</div>
+      <button class="sb-link" onclick="showPanel('orders',this)"><i class="fas fa-shopping-bag"></i> Commandes <span class="badge red" id="sbOrderCount">0</span></button>
+    </nav>
+    <div class="sb-bottom">
+      <a href="index.html" class="sb-back"><i class="fas fa-arrow-left"></i> Retour à la boutique</a>
+    </div>
+  </aside>
+
+  <!-- ═══════════ MAIN ═══════════ -->
+  <div class="main-area">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Produits <em>Catalogue</em></div>
+      <div class="topbar-actions">
+        <button class="t-btn outline" onclick="syncToShop()"><i class="fas fa-sync"></i> Synchroniser</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ─── PANEL: PRODUCTS ─── -->
+      <div class="panel on" id="panel-products">
+
+        <!-- Add product form -->
+        <div class="card">
+          <div class="card-title"><i class="fas fa-plus-circle"></i> Ajouter un nouveau produit</div>
+          <div class="f-grid">
+            <div class="f-grp">
+              <label>Nom du produit *</label>
+              <input type="text" id="pName" placeholder="Ex: Veste en Jean Levi's 501"/>
+            </div>
+            <div class="f-grp">
+              <label>Catégorie *</label>
+              <select id="pCat">
+                <option value="">— Choisir —</option>
+              </select>
+            </div>
+            <div class="f-grp">
+              <label>Prix (MAD) *</label>
+              <input type="number" id="pPrice" placeholder="250" min="0"/>
+            </div>
+            <div class="f-grp">
+              <label>Ancien prix (MAD) — optionnel</label>
+              <input type="number" id="pOldPrice" placeholder="350" min="0"/>
+            </div>
+            <div class="f-grp">
+              <label>Marque</label>
+              <input type="text" id="pBrand" placeholder="Levi's, H&M, Zara..."/>
+            </div>
+            <div class="f-grp">
+              <label>Taille de la pièce *</label>
+              <select id="pSize">
+                <option value="">— Choisir dans la liste —</option>
+              </select>
+            </div>
+            <div class="f-grp">
+              <label>État de la pièce *</label>
+              <select id="pCond">
+                <option value="excellent">⭐⭐⭐ Excellent</option>
+                <option value="good">⭐⭐ Bon</option>
+                <option value="fair">⭐ Correct</option>
+              </select>
+            </div>
+            <div class="f-grp">
+              <label>Badge</label>
+              <select id="pBadge">
+                <option value="">Aucun</option>
+                <option value="new">🆕 Nouveau</option>
+                <option value="sale">🏷️ Solde</option>
+                <option value="rare">💎 Rare</option>
+              </select>
+            </div>
+            <div class="f-grp full">
+              <label>Description</label>
+              <textarea id="pDesc" placeholder="Décrivez la pièce : tissu, coupe, particularités..."></textarea>
+            </div>
+          </div>
+
+          <!-- IMAGE UPLOAD (jusqu'à 4 photos) -->
+          <div style="margin-top:16px">
+            <div class="f-grp">
+              <label>Photos du produit * (1 à 4 images)</label>
+              <p class="f-hint">📸 Ajoutez les photos une par une (1 → 2 → 3 → 4). Elles partent sur Drive à l'ajout, chaque lien dans sa colonne Sheets.</p>
+            </div>
+            <div class="drive-box" style="margin-top:10px">
+              <i class="fab fa-google-drive"></i>
+              <div>
+                <p><strong>Upload automatique</strong> — Sélectionnez 1 à 4 images. Au clic sur « Ajouter le produit », elles partent sur Drive et les liens sont joints aux données. <br/>
+                (Folder ID Drive requis — onglet Google Sheets)</p>
+              </div>
+            </div>
+            <div class="f-grid" style="margin-top:10px">
+              <div>
+                <div class="upload-zone" id="uploadZone">
+                  <input type="file" id="imgFile" accept="image/*" multiple onchange="handleImgUpload(event)"/>
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <p><strong>Glissez ou cliquez</strong></p>
+                  <p>JPG, PNG, WEBP — ajoutez 1 par 1 (max 4)</p>
+                </div>
+                <div class="upload-progress" id="uploadProgress">
+                  <div class="upload-progress-bar" id="uploadProgressBar"></div>
+                </div>
+                <div id="multiImgPreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px"></div>
+              </div>
+              <div>
+                <div class="f-grp">
+                  <label>URL image 1 (principale)</label>
+                  <input type="url" id="pImg" placeholder="Rempli auto..." oninput="updateImgPreview()" readonly ondblclick="this.removeAttribute('readonly');this.focus()"/>
+                </div>
+                <div class="f-grp" style="margin-top:8px">
+                  <label>URL image 2</label>
+                  <input type="url" id="pImg2" placeholder="Rempli auto..." readonly ondblclick="this.removeAttribute('readonly');this.focus()"/>
+                </div>
+                <div class="f-grp" style="margin-top:8px">
+                  <label>URL image 3</label>
+                  <input type="url" id="pImg3" placeholder="Rempli auto..." readonly ondblclick="this.removeAttribute('readonly');this.focus()"/>
+                </div>
+                <div class="f-grp" style="margin-top:8px">
+                  <label>URL image 4</label>
+                  <input type="url" id="pImg4" placeholder="Rempli auto..." readonly ondblclick="this.removeAttribute('readonly');this.focus()"/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:14px;margin-top:20px;flex-wrap:wrap">
+            <button class="btn btn-dark" onclick="addProduct()"><i class="fas fa-plus"></i> Ajouter le produit</button>
+            <button class="btn btn-ghost" onclick="clearProdForm()"><i class="fas fa-times"></i> Annuler</button>
+            <span class="saved-msg" id="prodSaved"><i class="fas fa-check-circle"></i> Produit ajouté avec succès !</span>
+          </div>
+        </div>
+
+        <!-- Filters for product list -->
+        <div class="card">
+          <div class="card-title"><i class="fas fa-list"></i> Catalogue (<span id="prodTotalCount">0</span> produits)</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+            <select id="filterCat" onchange="renderAdminProds()" style="border:1.5px solid var(--border);padding:9px 14px;font-family:'Inter',sans-serif;font-size:12px;outline:none;cursor:pointer">
+              <option value="all">Toutes les catégories</option>
+            </select>
+            <select id="filterStatus" onchange="renderAdminProds()" style="border:1.5px solid var(--border);padding:9px 14px;font-family:'Inter',sans-serif;font-size:12px;outline:none;cursor:pointer">
+              <option value="all">Tous les statuts</option>
+              <option value="active">✅ Actifs</option>
+              <option value="hidden">👁️ Masqués</option>
+              <option value="sold">❌ Vendus</option>
+            </select>
+            <button class="btn btn-ghost btn-sm" onclick="fetchProductsFromGS()"><i class="fas fa-sync"></i> Actualiser</button>
+            <button class="btn btn-ghost btn-sm" onclick="fetchProductsFromGS()"><i class="fas fa-cloud-download-alt"></i> Importer Sheets</button>
+          </div>
+          <div class="prod-admin-grid" id="adminProdGrid"></div>
+        </div>
+      </div>
+
+      <!-- ─── PANEL: CATEGORIES ─── -->
+      <div class="panel" id="panel-categories">
+        <div class="card">
+          <div class="card-title"><i class="fas fa-plus"></i> Ajouter une catégorie</div>
+          <div class="f-grid">
+            <div class="f-grp">
+              <label>Nom de la catégorie *</label>
+              <input type="text" id="catName" placeholder="Ex: Robes, Pantalons, Chaussures..."/>
+            </div>
+            <div class="f-grp">
+              <label>Slug (ID interne) *</label>
+              <input type="text" id="catSlug" placeholder="robes" oninput="this.value=this.value.toLowerCase().replace(/\s+/g,'-')"/>
+              <p class="f-hint">Minuscules, sans espaces (ex: robes, t-shirts)</p>
+            </div>
+            <div class="f-grp">
+              <label>Icône FontAwesome (optionnel)</label>
+              <input type="text" id="catIcon" placeholder="fa-tshirt"/>
+            </div>
+            <div class="f-grp">
+              <label>Couleur de la catégorie</label>
+              <input type="color" id="catColor" value="#b8864e"/>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;margin-top:16px;flex-wrap:wrap">
+            <button class="btn btn-dark" onclick="addCategory()"><i class="fas fa-plus"></i> Ajouter</button>
+            <span class="saved-msg" id="catSaved"><i class="fas fa-check-circle"></i> Catégorie ajoutée !</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="fas fa-tags"></i> Catégories existantes</div>
+          <div id="catList"></div>
+        </div>
+      </div>
+
+      <!-- ─── PANEL: SIZES ─── -->
+      <div class="panel" id="panel-sizes">
+        <div class="card">
+          <div class="card-title"><i class="fas fa-ruler"></i> Gérer les tailles disponibles</div>
+          <p style="font-size:13px;color:var(--gray);margin-bottom:20px;line-height:1.8">
+            Ajoutez les tailles que vous avez <strong>réellement en stock</strong>. Ce sont ces tailles qui seront affichées lors de la commande (une seule pièce par produit, la taille est fixe).
+          </p>
+          <div style="margin-bottom:24px">
+            <label style="font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:700;color:var(--gray);display:block;margin-bottom:10px">Tailles actuellement disponibles <span style="color:var(--accent)">(<span id="sizeCount">0</span> tailles)</span></label>
+            <div class="size-chips-wrap" id="sizeChipsWrap"></div>
+            <div class="add-size-row">
+              <input type="text" id="newSizeInput" placeholder="Ex: S, M, L, XL, 38, 40, Unique..." onkeydown="if(event.key==='Enter')addSize()"/>
+              <button class="btn btn-dark btn-sm" onclick="addSize()"><i class="fas fa-plus"></i> Ajouter</button>
+            </div>
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:700;color:var(--gray);display:block;margin-bottom:10px">Tailles standards (cliquer pour ajouter)</label>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('XS')">XS</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('S')">S</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('M')">M</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('L')">L</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('XL')">XL</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('XXL')">XXL</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('XXXL')">XXXL</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('34')">34</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('36')">36</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('38')">38</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('40')">40</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('42')">42</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('44')">44</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('46')">46</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('Unique')">Unique</button>
+              <button class="btn btn-ghost btn-xs" onclick="addSizePreset('One Size')">One Size</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── PANEL: ORDERS ─── -->
+      <div class="panel" id="panel-orders">
+        <div class="card">
+          <div class="card-title"><i class="fas fa-shopping-bag"></i> Commandes reçues</div>
+          <p style="font-size:13px;color:var(--gray);margin-bottom:16px">Chargez les commandes depuis Sheets, ouvrez-les pour revoir le screenshot de paiement et changer le statut.</p>
+          <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+            <button class="btn btn-dark btn-sm" onclick="fetchOrdersFromGS()"><i class="fas fa-cloud-download-alt"></i> Actualiser</button>
+            <button class="btn btn-ghost btn-sm" onclick="openGS()"><i class="fas fa-external-link-alt"></i> Google Sheets</button>
+            <select id="orderFilterStatus" onchange="renderOrders()" style="border:1.5px solid var(--border);padding:8px 12px;font-size:12px;font-family:Inter,sans-serif">
+              <option value="all">Tous les statuts</option>
+              <option value="attente">En attente</option>
+              <option value="approuv">Approuvée</option>
+              <option value="prépar">En préparation</option>
+              <option value="expéd">En expédition</option>
+              <option value="livr">Livrée</option>
+              <option value="annul">Annulée</option>
+            </select>
+          </div>
+          <div id="ordersList"></div>
+        </div>
+      </div>
+
+      <!-- Modal détail commande -->
+      <div id="orderModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;padding:20px">
+        <div style="background:#fff;max-width:720px;width:100%;max-height:90vh;overflow:auto;border:1px solid var(--border);padding:28px;position:relative">
+          <button onclick="closeOrderModal()" style="position:absolute;top:12px;right:14px;border:none;background:none;font-size:22px;cursor:pointer;color:var(--gray)">×</button>
+          <div class="card-title" style="margin-bottom:18px"><i class="fas fa-file-invoice"></i> Détail commande <span id="omId"></span></div>
+          <div id="omBody"></div>
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+            <div class="f-grp" style="margin-bottom:12px">
+              <label>Changer le statut</label>
+              <select id="omStatus" style="width:100%;border:1.5px solid var(--border);padding:10px 12px;font-size:13px">
+                <option value="⏳ En attente">⏳ En attente</option>
+                <option value="✓ Approuvée">✓ Approuvée</option>
+                <option value="🔧 En préparation">🔧 En préparation</option>
+                <option value="📦 En expédition">📦 En expédition</option>
+                <option value="✅ Livrée">✅ Livrée</option>
+                <option value="✕ Annulée">✕ Annulée</option>
+              </select>
+            </div>
+            <div class="f-grp" id="omCancelWrap" style="display:none;margin-bottom:12px">
+              <label>Motif d'annulation *</label>
+              <textarea id="omCancelReason" rows="2" placeholder="Pourquoi la commande est annulée ?" style="width:100%;border:1.5px solid var(--border);padding:10px 12px;font-size:13px;font-family:Inter,sans-serif"></textarea>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-dark" onclick="saveOrderStatus()"><i class="fas fa-check"></i> Enregistrer le statut</button>
+              <button class="btn" style="background:#25D366;color:#fff;border:none" onclick="if(currentOrderId)notifyClientWhatsApp(currentOrderId)"><i class="fab fa-whatsapp"></i> WhatsApp client</button>
+              <button class="btn btn-ghost" onclick="closeOrderModal()">Fermer</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main-area -->
+</div><!-- /layout -->
+
+<!-- ─── PRODUCT EDIT MODAL ─── -->
+<div id="modalBg" onclick="closeModal(event)">
+  <div class="modal" id="editModal">
+    <div class="modal-head">
+      <h2>Modifier le produit</h2>
+      <button class="modal-x" onclick="closeEditModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="f-grid">
+        <div class="f-grp">
+          <label>Nom *</label>
+          <input type="text" id="eName"/>
+        </div>
+        <div class="f-grp">
+          <label>Catégorie</label>
+          <select id="eCat"></select>
+        </div>
+        <div class="f-grp">
+          <label>Prix (MAD) *</label>
+          <input type="number" id="ePrice"/>
+        </div>
+        <div class="f-grp">
+          <label>Ancien prix</label>
+          <input type="number" id="eOldPrice"/>
+        </div>
+        <div class="f-grp">
+          <label>Marque</label>
+          <input type="text" id="eBrand"/>
+        </div>
+        <div class="f-grp">
+          <label>Taille</label>
+          <select id="eSize"></select>
+        </div>
+        <div class="f-grp">
+          <label>État</label>
+          <select id="eCond">
+            <option value="excellent">Excellent</option>
+            <option value="good">Bon</option>
+            <option value="fair">Correct</option>
+          </select>
+        </div>
+        <div class="f-grp">
+          <label>Badge</label>
+          <select id="eBadge">
+            <option value="">Aucun</option>
+            <option value="new">Nouveau</option>
+            <option value="sale">Solde</option>
+            <option value="rare">Rare</option>
+          </select>
+        </div>
+        <div class="f-grp">
+          <label>Statut *</label>
+          <select id="eStatus">
+            <option value="active">✅ Actif</option>
+            <option value="hidden">👁️ Masqué</option>
+            <option value="sold">❌ Vendu</option>
+          </select>
+        </div>
+        <div class="f-grp full">
+          <label>URL image 1 (principale)</label>
+          <input type="url" id="eImg"/>
+        </div>
+        <div class="f-grp full">
+          <label>URL image 2</label>
+          <input type="url" id="eImg2"/>
+        </div>
+        <div class="f-grp full">
+          <label>URL image 3</label>
+          <input type="url" id="eImg3"/>
+        </div>
+        <div class="f-grp full">
+          <label>URL image 4</label>
+          <input type="url" id="eImg4"/>
+        </div>
+        <div class="f-grp full">
+          <label>Description</label>
+          <textarea id="eDesc"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+        <button class="btn btn-dark" onclick="saveEditProduct()"><i class="fas fa-save"></i> Sauvegarder</button>
+        <button class="btn btn-danger" onclick="deleteFromEditModal()"><i class="fas fa-trash"></i> Supprimer</button>
+        <button class="btn btn-ghost" onclick="closeEditModal()">Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- MOB SIDEBAR BTN + OVERLAY -->
+<div id="sbOverlay" onclick="toggleSidebar()"></div>
+<button class="mob-sb-btn" onclick="toggleSidebar()" aria-label="Menu"><i class="fas fa-bars"></i></button>
+
+<script>
+// ════════════════════════════════════════════════════════
+// ADMIN LOCK (code secret)
+// ════════════════════════════════════════════════════════
+const ADMIN_SECRET = '010203';
+const LOCK_KEY = 'pvAdminUnlocked';
+
+function isUnlocked() {
+  try { return sessionStorage.getItem(LOCK_KEY) === '1'; } catch (_) { return false; }
+}
+
+function unlockAdmin() {
+  try { sessionStorage.setItem(LOCK_KEY, '1'); } catch (_) {}
+  const lock = document.getElementById('adminLock');
+  if (lock) lock.classList.add('unlocked');
+  document.body.classList.remove('locked');
+  const codeInp = document.getElementById('adminCode');
+  if (codeInp) codeInp.value = '';
+  const err = document.getElementById('lockErr');
+  if (err) err.textContent = '';
+}
+
+function tryUnlock() {
+  const inp = document.getElementById('adminCode');
+  const err = document.getElementById('lockErr');
+  const code = (inp && inp.value ? inp.value : '').trim();
+  if (code === ADMIN_SECRET) {
+    unlockAdmin();
+    if (typeof showToast === 'function') showToast('✓ Accès autorisé');
+  } else {
+    if (err) err.textContent = 'Code incorrect';
+    if (inp) {
+      inp.value = '';
+      inp.focus();
+      inp.style.borderColor = 'var(--danger)';
+      setTimeout(function() { inp.style.borderColor = ''; }, 800);
+    }
+  }
+}
+
+function initAdminLock() {
+  if (isUnlocked()) {
+    unlockAdmin();
+    return;
+  }
+  document.body.classList.add('locked');
+  const lock = document.getElementById('adminLock');
+  if (lock) lock.classList.remove('unlocked');
+  const inp = document.getElementById('adminCode');
+  if (inp) {
+    inp.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        tryUnlock();
+      }
+    });
+    setTimeout(function() { inp.focus(); }, 100);
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// SHARED STORAGE (same keys as index.html)
+// ════════════════════════════════════════════════════════
+let CONFIG = {
+  gsUrl:'',
+  driveFolderId:'1DaCGCqqgw22IFv3YYb91R3zD0z2lTF77',
+  storeName:'Ayoub Clothing', storeSlogan:'Vintage sélectionné',
+  storePhone:'+212 6XX XXX XXX', storeEmail:'contact@planetvintage.ma',
+  storeInsta:'@planetvintage.ma', storeCity:'Casablanca, Maroc',
+  storeDesc:'La première boutique de vêtements vintage au Maroc.',
+  deliveryFee:30, freeDelivery:300,
+  depositPct:30, payMethod:'Virement bancaire',
+  payName:'', payAccount:'', payInstructions:'',
+  heroLine1:'Le Vintage', heroLine2:'Autrement',
+  heroSub:"Vêtements d'occasion sélectionnés — authentiques, durables & uniques",
+  heroImg:'',
+  colorAccent:'#b8864e', colorDark:'#1c1c1c', colorCream:'#f7f3ed'
+};
+
+const defaultCategories = [
+  {slug:'hommes', name:'Hommes', icon:'fa-male', color:'#2c4a7c'},
+  {slug:'femmes', name:'Femmes', icon:'fa-female', color:'#c0537a'},
+  {slug:'vestes', name:'Vestes', icon:'fa-tshirt', color:'#b8864e'},
+  {slug:'accessoires', name:'Accessoires', icon:'fa-hat-cowboy', color:'#2d7a4f'},
+];
+const defaultSizes = ['XS','S','M','L','XL','XXL','XXXL','38','40','42','Unique'];
+
+const defaultProducts = [
+  {id:1,name:'Veste en Jean Classique',cat:'vestes',price:249,oldPrice:380,cond:'excellent',size:'M',brand:"Levi's",badge:'new',desc:"Veste en jean authentique en excellent état.",img:'https://images.pexels.com/photos/6276009/pexels-photo-6276009.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=600',status:'active'},
+  {id:2,name:'Chemise Flanelle Automne',cat:'hommes',price:120,oldPrice:null,cond:'good',size:'L',brand:'H&M',badge:null,desc:'Chemise en flanelle douce.',img:'https://images.pexels.com/photos/31070903/pexels-photo-31070903.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=600',status:'active'},
+  {id:3,name:'Robe Vintage Florale',cat:'femmes',price:185,oldPrice:290,cond:'excellent',size:'S',brand:'Zara',badge:'sale',desc:'Robe vintage à motifs floraux.',img:'https://images.pexels.com/photos/31823965/pexels-photo-31823965.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=600',status:'active'},
+  {id:4,name:'Veste en Cuir Marron',cat:'vestes',price:450,oldPrice:620,cond:'good',size:'M',brand:'Wilson',badge:'rare',desc:"Veste en cuir véritable.",img:'https://images.pexels.com/photos/29465010/pexels-photo-29465010.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=600',status:'active'},
+  {id:5,name:'Pull Laine Vintage',cat:'femmes',price:150,oldPrice:null,cond:'good',size:'S',brand:'Mango',badge:'new',desc:'Pull en laine douce.',img:'https://images.pexels.com/photos/18581418/pexels-photo-18581418.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=600',status:'active'},
+  {id:6,name:'Sweat Oversize Champion',cat:'hommes',price:90,oldPrice:140,cond:'fair',size:'XL',brand:'Champion',badge:'sale',desc:'Sweatshirt ultra-confortable.',img:'https://images.pexels.com/photos/30685573/pexels-photo-30685573.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=600',status:'active'},
+];
+
+let products = JSON.parse(localStorage.getItem('pvProducts')) || defaultProducts;
+let categories = JSON.parse(localStorage.getItem('pvCategories')) || defaultCategories;
+let sizes = JSON.parse(localStorage.getItem('pvSizes')) || defaultSizes;
+let editingId = null;
+
+function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+function saveProducts() { save('pvProducts', products); updateSbCounts(); }
+function saveCats() { save('pvCategories', categories); }
+function saveSizes() { save('pvSizes', sizes); }
+
+/** Source unique : config.json (même dossier). Modifier le fichier = modifier le site. */
+function saveAllConfig() { /* no-op : config via config.json uniquement */ }
+
+async function loadConfigJson() {
+  try {
+    const res = await fetch('config.json?_=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) {
+      console.warn('config.json HTTP', res.status);
+      return false;
+    }
+    const data = await res.json();
+    if (data && typeof data === 'object') {
+      CONFIG = { ...CONFIG, ...data };
+      console.log('✓ config.json chargé', {
+        gsUrl: CONFIG.gsUrl ? 'ok' : 'vide',
+        driveFolderId: CONFIG.driveFolderId || '',
+        storeName: CONFIG.storeName || ''
+      });
+      return true;
+    }
+  } catch (e) {
+    console.warn('config.json non chargé (ouvrez via un serveur local, pas file://)', e);
+  }
+  return false;
+}
+
+function loadConfig() {
+  // compat : ne plus utiliser localStorage pour la config
+  return loadConfigJson();
+}
+
+// ════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════
+const panelTitles = {
+  products:'Produits <em>Catalogue</em>',
+  categories:'Catégories <em>& Filtres</em>',
+  sizes:'Gestion des <em>Tailles</em>',
+  orders:'Commandes <em>Reçues</em>',
+};
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.sb-link').forEach(b=>b.classList.remove('on'));
+  const panel = document.getElementById('panel-'+id);
+  if (panel) panel.classList.add('on');
+  if(btn) btn.classList.add('on');
+  document.getElementById('topbarTitle').innerHTML = panelTitles[id]||id;
+  if(id==='products'){ renderAdminProds(); autoLoadCatalogue(); }
+  if(id==='categories') renderCatList();
+  if(id==='sizes') renderSizes();
+  if(id==='orders'){ renderOrders(); fetchOrdersFromGS(); }
+  const sb = document.getElementById('sidebar');
+  if (sb && sb.classList.contains('mob-open') && window.innerWidth <= 900) {
+    toggleSidebar();
+  }
+}
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sbOverlay');
+  if (!sb) return;
+  const open = sb.classList.toggle('mob-open');
+  if (ov) ov.classList.toggle('show', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+
+// ════════════════════════════════════════════════════════
+// CATEGORIES
+// ════════════════════════════════════════════════════════
+function addCategory() {
+  const name=document.getElementById('catName').value.trim();
+  const slug=document.getElementById('catSlug').value.trim();
+  if(!name||!slug){ showToast('⚠️ Nom et slug sont obligatoires'); return; }
+  if(categories.find(c=>c.slug===slug)){ showToast('⚠️ Ce slug existe déjà'); return; }
+  categories.push({slug, name, icon:document.getElementById('catIcon').value, color:document.getElementById('catColor').value});
+  saveCats(); renderCatList(); populateCatSelects();
+  document.getElementById('catName').value='';
+  document.getElementById('catSlug').value='';
+  showSaved('catSaved');
+  syncCatsToGS();
+}
+
+function deleteCategory(slug) {
+  if(!confirm('Supprimer cette catégorie ? Les produits associés passeront sans catégorie.')) return;
+  categories = categories.filter(c=>c.slug!==slug);
+  saveCats(); renderCatList(); populateCatSelects();
+  syncCatsToGS();
+  showToast('Catégorie supprimée');
+}
+
+function renderCatList() {
+  const el=document.getElementById('catList');
+  if(!categories.length){ el.innerHTML='<p style="color:var(--gray);font-size:13px">Aucune catégorie.</p>'; return; }
+  el.innerHTML = categories.map(c=>{
+    const count = products.filter(p=>p.cat===c.slug && p.status!=='sold').length;
+    return `
+    <div class="cat-item">
+      <div>
+        <div class="cat-item-name"><i class="fas ${c.icon||'fa-tag'}" style="color:${c.color||'var(--accent)'};margin-right:8px"></i>${c.name}</div>
+        <div class="cat-item-count">Slug: ${c.slug} · ${count} produit(s) actif(s)</div>
+      </div>
+      <button class="btn btn-danger btn-xs" onclick="deleteCategory('${c.slug}')"><i class="fas fa-trash"></i></button>
+    </div>`;
+  }).join('');
+}
+
+function populateCatSelects() {
+  ['pCat','eCat','filterCat'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    const cur=el.value;
+    if(id==='filterCat'){
+      el.innerHTML='<option value="all">Toutes les catégories</option>'+categories.map(c=>`<option value="${c.slug}">${c.name}</option>`).join('');
+    } else {
+      el.innerHTML='<option value="">— Choisir —</option>'+categories.map(c=>`<option value="${c.slug}">${c.name}</option>`).join('');
+    }
+    el.value=cur;
+  });
+}
+
+// ════════════════════════════════════════════════════════
+// SIZES
+// ════════════════════════════════════════════════════════
+function addSize() {
+  const val=document.getElementById('newSizeInput').value.trim().toUpperCase();
+  if(!val){ return; }
+  if(sizes.includes(val)){ showToast('⚠️ Cette taille existe déjà'); return; }
+  sizes.push(val);
+  saveSizes(); renderSizes(); populateSizeSelects();
+  document.getElementById('newSizeInput').value='';
+  syncSizesToGS();
+}
+function addSizePreset(s){ if(!sizes.includes(s)){ sizes.push(s); saveSizes(); renderSizes(); populateSizeSelects(); syncSizesToGS(); showToast(`✓ Taille ${s} ajoutée`); } else showToast(`Taille ${s} déjà présente`); }
+function removeSize(s) {
+  const used=products.find(p=>p.size===s);
+  if(used){ showToast(`⚠️ Taille "${s}" utilisée par "${used.name}"`); return; }
+  sizes=sizes.filter(x=>x!==s);
+  saveSizes(); renderSizes(); populateSizeSelects(); syncSizesToGS();
+}
+
+function renderSizes() {
+  document.getElementById('sizeCount').textContent=sizes.length;
+  const wrap=document.getElementById('sizeChipsWrap');
+  if(!wrap) return;
+  wrap.innerHTML = sizes.map(s=>{
+    const used=products.filter(p=>p.size===s && p.status!=='sold').length>0;
+    return `<div class="size-chip ${used?'used':''}">${s}<button class="rm" onclick="removeSize('${s}')" title="Supprimer"><i class="fas fa-times"></i></button></div>`;
+  }).join('') || '<span style="color:var(--gray);font-size:13px">Aucune taille configurée</span>';
+}
+
+function populateSizeSelects() {
+  ['pSize','eSize'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    const cur=el.value;
+    el.innerHTML='<option value="">— Choisir la taille —</option>'+sizes.map(s=>`<option value="${s}">${s}</option>`).join('');
+    if(cur) el.value=cur;
+  });
+}
+
+// ════════════════════════════════════════════════════════
+// PRODUCTS
+// ════════════════════════════════════════════════════════
+let pendingImageFiles = []; // jusqu'à 4 fichiers
+
+async function addProduct() {
+  const name = document.getElementById('pName').value.trim();
+  const price = +document.getElementById('pPrice').value;
+  const cat = document.getElementById('pCat').value;
+  const size = document.getElementById('pSize').value;
+  let imgs = [
+    document.getElementById('pImg').value.trim(),
+    document.getElementById('pImg2').value.trim(),
+    document.getElementById('pImg3').value.trim(),
+    document.getElementById('pImg4').value.trim()
+  ];
+
+  if (!name || !price || !cat || !size) {
+    showToast('⚠️ Nom, prix, catégorie et taille sont obligatoires');
+    return;
+  }
+  if (!pendingImageFiles.length && !imgs[0]) {
+    showToast('⚠️ Choisissez au moins une photo du produit');
+    return;
+  }
+
+  const btn = document.querySelector('button[onclick="addProduct()"]');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Envoi...'; }
+
+  const productId = Date.now();
+  const productMeta = {
+    id: productId,
+    name: name,
+    cat: cat,
+    price: price,
+    oldPrice: +document.getElementById('pOldPrice').value || null,
+    cond: document.getElementById('pCond').value,
+    size: size,
+    brand: document.getElementById('pBrand').value || 'Vintage',
+    badge: document.getElementById('pBadge').value || null,
+    desc: document.getElementById('pDesc').value || '',
+    status: 'active',
+    dateAdded: new Date().toLocaleString('fr-MA'),
+    img: '', img2: '', img3: '', img4: ''
+  };
+
+  try {
+    if (pendingImageFiles.length) {
+      showToast('⏳ Upload ' + pendingImageFiles.length + ' image(s) Drive...');
+      const urls = [];
+      for (let i = 0; i < pendingImageFiles.length; i++) {
+        showToast('⏳ Image ' + (i + 1) + '/' + pendingImageFiles.length + '...');
+        try {
+          // Only attach product meta on last image so Sheets row is written once with all URLs ideally
+          // Actually write after all uploads
+          const url = await uploadFileToDrive(pendingImageFiles[i], null);
+          if (url) urls.push(url);
+          else {
+            // fallback last upload
+            await new Promise(r => setTimeout(r, 1000));
+            try {
+              const last = await gsJsonp('get_last_upload');
+              if (last && last.upload && last.upload.url) urls.push(convertDriveUrl(last.upload.url));
+            } catch (_) {}
+            if (urls.length <= i) {
+              try {
+                const fl = await gsJsonp('get_folder_latest', { folderId: CONFIG.driveFolderId });
+                if (fl && fl.upload && fl.upload.url) urls.push(convertDriveUrl(fl.upload.url));
+              } catch (_) {}
+            }
+          }
+        } catch (upErr) {
+          console.error(upErr);
+        }
+      }
+      // Fill imgs array
+      for (let i = 0; i < 4; i++) {
+        if (urls[i]) imgs[i] = urls[i];
+      }
+      document.getElementById('pImg').value = imgs[0] || '';
+      document.getElementById('pImg2').value = imgs[1] || '';
+      document.getElementById('pImg3').value = imgs[2] || '';
+      document.getElementById('pImg4').value = imgs[3] || '';
+    }
+
+    productMeta.img = convertDriveUrl(imgs[0] || '');
+    productMeta.img2 = convertDriveUrl(imgs[1] || '');
+    productMeta.img3 = convertDriveUrl(imgs[2] || '');
+    productMeta.img4 = convertDriveUrl(imgs[3] || '');
+
+    showToast('⏳ Envoi produit + liens images vers Sheets...');
+    const r = await syncProductToGS(productMeta);
+
+    const p = Object.assign({}, productMeta);
+    products.unshift(p);
+    saveProducts();
+    renderAdminProds();
+    clearProdForm();
+    showSaved('prodSaved');
+
+    const nImg = [p.img, p.img2, p.img3, p.img4].filter(Boolean).length;
+    if (r && r.status === 'ok') {
+      showToast('✓ "' + name + '" + ' + nImg + ' image(s) dans Sheets');
+    } else {
+      showToast('✓ "' + name + '" local — vérifiez Sheets');
+    }
+  } catch (err) {
+    console.error(err);
+    showToast('⚠️ Erreur: ' + (err.message || 'ajout impossible'));
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-plus"></i> Ajouter le produit'; }
+  }
+}
+
+function setProductStatus(id, status) {
+  const p=products.find(x=>x.id===id);
+  if(!p) return;
+  p.status=status;
+  saveProducts(); renderAdminProds();
+  const labels={active:'✅ Actif',hidden:'👁️ Masqué',sold:'❌ Vendu'};
+  showToast('⏳ "' + p.name + '" → ' + (labels[status]||status) + '...');
+  syncProductToGS(p).then(function(r) {
+    if (r && r.status === 'ok') showToast('✓ "' + p.name + '" → ' + (labels[status]||status) + ' (Sheets)');
+    else showToast('✓ "' + p.name + '" → ' + (labels[status]||status));
+  });
+}
+
+async function deleteProduct(id) {
+  if(!confirm('Supprimer définitivement ce produit ?\nIl sera aussi retiré de Google Sheets.')) return;
+  const p = products.find(x => String(x.id) === String(id));
+  const name = p ? p.name : '';
+  products = products.filter(x => String(x.id) !== String(id));
+  saveProducts(); renderAdminProds();
+  showToast('⏳ Suppression' + (name ? ' de "' + name + '"' : '') + '...');
+  try {
+    const res = await deleteProductFromGS(id);
+    if (res && res.status === 'ok') {
+      showToast('✓ Produit supprimé (local + Sheets)');
+    } else {
+      showToast('✓ Supprimé localement — vérifiez Sheets');
+    }
+  } catch (err) {
+    showToast('✓ Supprimé localement — ' + (err.message || 'Sheets non joignable'));
+  }
+}
+
+async function deleteProductFromGS(id) {
+  if (!CONFIG.gsUrl) return { status: 'error', msg: 'no_url' };
+  try {
+    const res = await gsJsonp('delete_product', { id: String(id) });
+    if (res && res.status === 'ok') return res;
+    await gsPost({ type: 'delete_product', id: String(id) });
+    return res || { status: 'ok' };
+  } catch (err) {
+    try {
+      await gsPost({ type: 'delete_product', id: String(id) });
+      return { status: 'ok', note: 'post_fallback' };
+    } catch (e2) {
+      return { status: 'error', msg: String(err.message || err) };
+    }
+  }
+}
+
+function deleteFromEditModal() {
+  if (!editingId) return;
+  const id = editingId;
+  closeEditModal();
+  deleteProduct(id);
+}
+
+function openEditModal(id) {
+  const p=products.find(x=>x.id===id);
+  if(!p) return;
+  editingId=id;
+  document.getElementById('eName').value=p.name||'';
+  document.getElementById('ePrice').value=p.price||'';
+  document.getElementById('eOldPrice').value=p.oldPrice||'';
+  document.getElementById('eBrand').value=p.brand||'';
+  document.getElementById('eImg').value=p.img||'';
+  const e2=document.getElementById('eImg2'); if(e2) e2.value=p.img2||'';
+  const e3=document.getElementById('eImg3'); if(e3) e3.value=p.img3||'';
+  const e4=document.getElementById('eImg4'); if(e4) e4.value=p.img4||'';
+  document.getElementById('eDesc').value=p.desc||'';
+  populateCatSelects(); populateSizeSelects();
+  document.getElementById('eCat').value=p.cat||'';
+  document.getElementById('eSize').value=p.size||'';
+  document.getElementById('eCond').value=p.cond||'excellent';
+  document.getElementById('eBadge').value=p.badge||'';
+  const es=document.getElementById('eStatus'); if(es) es.value=p.status||'active';
+  document.getElementById('modalBg').classList.add('open');
+}
+function closeEditModal(){ document.getElementById('modalBg').classList.remove('open'); editingId=null; }
+function closeModal(e){ if(e.target===document.getElementById('modalBg')) closeEditModal(); }
+
+function saveEditProduct() {
+  const p=products.find(x=>x.id===editingId);
+  if(!p) return;
+  const name=document.getElementById('eName').value.trim();
+  const price=+document.getElementById('ePrice').value;
+  if(!name || !price){ showToast('⚠️ Nom et prix obligatoires'); return; }
+  p.name=name;
+  p.price=price;
+  p.oldPrice=+document.getElementById('eOldPrice').value||null;
+  p.brand=document.getElementById('eBrand').value;
+  p.img=convertDriveUrl(document.getElementById('eImg').value);
+  const e2=document.getElementById('eImg2'); if(e2) p.img2=convertDriveUrl(e2.value);
+  const e3=document.getElementById('eImg3'); if(e3) p.img3=convertDriveUrl(e3.value);
+  const e4=document.getElementById('eImg4'); if(e4) p.img4=convertDriveUrl(e4.value);
+  p.desc=document.getElementById('eDesc').value;
+  p.cat=document.getElementById('eCat').value;
+  p.size=document.getElementById('eSize').value;
+  p.cond=document.getElementById('eCond').value;
+  p.badge=document.getElementById('eBadge').value||null;
+  const es=document.getElementById('eStatus'); if(es) p.status=es.value||'active';
+  saveProducts(); renderAdminProds(); closeEditModal();
+  showToast('⏳ Enregistrement...');
+  syncProductToGS(p).then(function(r) {
+    if (r && r.status === 'ok') showToast('✓ "' + p.name + '" modifié + Sheets');
+    else showToast('✓ "' + p.name + '" modifié (sync Sheets en cours)');
+  });
+}
+
+function renderAdminProds() {
+  const catFilter=document.getElementById('filterCat')?.value||'all';
+  const statFilter=document.getElementById('filterStatus')?.value||'all';
+  let list=[...products];
+  if(catFilter!=='all') list=list.filter(p=>p.cat===catFilter);
+  if(statFilter!=='all') list=list.filter(p=>p.status===statFilter);
+  document.getElementById('prodTotalCount').textContent=products.length;
+  const grid=document.getElementById('adminProdGrid');
+  if(!list.length){ grid.innerHTML='<div style="grid-column:1/-1;color:var(--gray);font-size:13px;padding:20px">Aucun produit trouvé.</div>'; return; }
+  grid.innerHTML=list.map(p=>{
+    const stClass=p.status==='active'?'st-active':p.status==='hidden'?'st-hidden':'st-sold';
+    const stLabel=p.status==='active'?'Actif':p.status==='hidden'?'Masqué':'Vendu';
+    const cardClass=p.status==='hidden'?'hidden-prod':p.status==='sold'?'sold-prod':'';
+    const catName=categories.find(c=>c.slug===p.cat)?.name||p.cat||'—';
+    return `
+    <div class="pad-card ${cardClass}">
+      <div class="pad-img">
+        <img src="${driveImgSrc(p.img)}" data-raw="${String(p.img||'').replace(/"/g,'&quot;')}" data-fb="0" alt="${p.name||''}" referrerpolicy="no-referrer" loading="lazy" onerror="onDriveImgError(this)"/>
+        <div class="pad-status ${stClass}">${stLabel}</div>
+      </div>
+      <div class="pad-info">
+        <div class="pad-name">${p.name}</div>
+        <div class="pad-meta">${catName} · ${p.brand||'—'}</div>
+        <div class="pad-meta">Taille: <strong>${p.size||'—'}</strong> · ${p.cond==='excellent'?'⭐⭐⭐':p.cond==='good'?'⭐⭐':'⭐'}</div>
+        <div class="pad-price">${p.price} MAD${p.oldPrice?` <del style="font-size:12px;color:#bbb;font-weight:400">${p.oldPrice}</del>`:''}</div>
+        <div class="pad-actions">
+          <button class="btn btn-ghost btn-xs" onclick="openEditModal(${p.id})" title="Modifier"><i class="fas fa-edit"></i></button>
+          ${p.status!=='active'?`<button class="btn btn-xs" style="background:var(--success);color:#fff;border:none" onclick="setProductStatus(${p.id},'active')" title="Activer"><i class="fas fa-eye"></i></button>`:''}
+          ${p.status!=='hidden'?`<button class="btn btn-xs" style="background:var(--warn);color:#fff;border:none" onclick="setProductStatus(${p.id},'hidden')" title="Masquer"><i class="fas fa-eye-slash"></i></button>`:''}
+          ${p.status!=='sold'?`<button class="btn btn-xs" style="background:var(--danger);color:#fff;border:none" onclick="setProductStatus(${p.id},'sold')" title="Marquer vendu"><i class="fas fa-times-circle"></i></button>`:''}
+          <button class="btn btn-danger btn-xs" onclick="deleteProduct(${p.id})" title="Supprimer"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function clearProdForm(){
+  ['pName','pPrice','pOldPrice','pBrand','pImg','pImg2','pImg3','pImg4','pDesc'].forEach(f=>{const e=document.getElementById(f);if(e)e.value='';});
+  document.getElementById('pCat').value='';
+  document.getElementById('pSize').value='';
+  document.getElementById('pBadge').value='';
+  document.getElementById('pCond').value='excellent';
+  const multiPrev = document.getElementById('multiImgPreview');
+  if (multiPrev) multiPrev.innerHTML = '';
+  pendingImageFiles = [];
+  const fileInp = document.getElementById('imgFile');
+  if (fileInp) fileInp.value = '';
+  ['pImg','pImg2','pImg3','pImg4'].forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('readonly', '');
+  });
+}
+
+// ════════════════════════════════════════════════════════
+// GOOGLE SHEETS HELPERS (JSONP + form POST fiable)
+// ════════════════════════════════════════════════════════
+function gsJsonp(action, extraParams) {
+  return new Promise((resolve, reject) => {
+    if (!CONFIG.gsUrl) { reject(new Error('URL Apps Script non configurée')); return; }
+    const cb = 'pv_cb_' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
+    const params = new URLSearchParams({ action: action, callback: cb, ...(extraParams || {}) });
+    const url = CONFIG.gsUrl + (CONFIG.gsUrl.includes('?') ? '&' : '?') + params.toString();
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error('Timeout connexion Sheets'));
+    }, 25000);
+    function cleanup() {
+      clearTimeout(timer);
+      try { delete window[cb]; } catch (e) {}
+      if (script && script.parentNode) script.parentNode.removeChild(script);
+    }
+    window[cb] = (data) => { cleanup(); resolve(data); };
+    const script = document.createElement('script');
+    script.onerror = () => { cleanup(); reject(new Error('Erreur réseau Apps Script')); };
+    script.src = url;
+    document.body.appendChild(script);
+  });
+}
+
+/** Envoi fiable vers Apps Script via form + iframe + fetch */
+function gsPost(payload) {
+  return new Promise((resolve) => {
+    if (!CONFIG.gsUrl) { resolve(false); return; }
+    const requestId = payload.requestId || ('r_' + Date.now() + '_' + Math.floor(Math.random() * 1e6));
+    payload = Object.assign({}, payload, { requestId: requestId });
+    const bodyStr = JSON.stringify(payload);
+
+    // Méthode 1: form POST (application/x-www-form-urlencoded) — le plus fiable avec Apps Script
+    const iframeName = 'gs_frame_' + requestId;
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.cssText = 'display:none;width:0;height:0;border:0;position:absolute';
+    document.body.appendChild(iframe);
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = CONFIG.gsUrl;
+    form.target = iframeName;
+    form.enctype = 'application/x-www-form-urlencoded';
+    form.acceptCharset = 'UTF-8';
+    form.style.display = 'none';
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'data';
+    input.value = bodyStr;
+    form.appendChild(input);
+
+    // Champs individuels en secours (évite les problèmes de parse JSON)
+    if (payload.type) {
+      ['type','id','name','cat','price','oldPrice','size','cond','brand','badge','desc','img','status','dateAdded','folderId','fileName','mimeType','requestId'].forEach(function(k) {
+        if (payload[k] === undefined || payload[k] === null) return;
+        if (k === 'data') return;
+        // ne pas dupliquer base64 en champ séparé (trop gros) — reste dans data JSON
+        if (k === 'base64') return;
+        const inp = document.createElement('input');
+        inp.type = 'hidden';
+        inp.name = k;
+        inp.value = String(payload[k]);
+        form.appendChild(inp);
+      });
+    }
+
+    document.body.appendChild(form);
+    try { form.submit(); } catch (e) { console.warn('gsPost form', e); }
+
+    // Méthode 2: fetch text/plain (simple request, pas de preflight)
+    try {
+      fetch(CONFIG.gsUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: bodyStr
+      }).catch(function() {});
+    } catch (_) {}
+
+    setTimeout(function() {
+      try { form.remove(); } catch (_) {}
+      try { iframe.remove(); } catch (_) {}
+      resolve(true);
+    }, 3000);
+  });
+}
+
+async function gsPostAndWait(payload, maxTries) {
+  const requestId = payload.requestId || ('r_' + Date.now() + '_' + Math.floor(Math.random() * 1e6));
+  payload.requestId = requestId;
+  await gsPost(payload);
+  maxTries = maxTries || 12;
+  for (let i = 0; i < maxTries; i++) {
+    await new Promise(function(r) { setTimeout(r, 800); });
+    try {
+      const res = await gsJsonp('get_request', { id: requestId });
+      if (res && res.status && res.status !== 'pending') return res;
+    } catch (_) {}
+  }
+  // Dernier recours: vérifier get_last_upload / ne pas bloquer
+  return { status: 'ok', note: 'timeout_poll', requestId: requestId };
+}
+
+// ════════════════════════════════════════════════════════
+// IMAGE UPLOAD (Drive via Apps Script)
+// ════════════════════════════════════════════════════════
+function extractDriveId(url) {
+  if (!url) return null;
+  const s = String(url).trim();
+  let m = s.match(/\/file\/d\/([^/?#]+)/);
+  if (m) return m[1];
+  m = s.match(/[?&]id=([^&]+)/);
+  if (m) return m[1];
+  m = s.match(/\/d\/([^/?#]+)/);
+  if (m) return m[1];
+  m = s.match(/thumbnail\?id=([^&]+)/);
+  if (m) return m[1];
+  if (/^[a-zA-Z0-9_-]{25,}$/.test(s)) return s;
+  return null;
+}
+
+/** URL affichable dans <img> — thumbnail Drive (uc?export=view est souvent bloqué) */
+function convertDriveUrl(url) {
+  if (!url) return '';
+  const id = extractDriveId(url);
+  if (id) return 'https://drive.google.com/thumbnail?id=' + id + '&sz=w1000';
+  return String(url);
+}
+
+function driveImgFallbacks(url) {
+  const id = extractDriveId(url);
+  if (!id) return [url || ''];
+  return [
+    'https://drive.google.com/thumbnail?id=' + id + '&sz=w1000',
+    'https://lh3.googleusercontent.com/d/' + id + '=w1000',
+    'https://drive.google.com/uc?id=' + id,
+    'https://drive.google.com/uc?export=view&id=' + id
+  ];
+}
+
+function driveImgSrc(url) {
+  return convertDriveUrl(url) || 'https://via.placeholder.com/300x400?text=No+Image';
+}
+
+function onDriveImgError(el) {
+  if (!el) return;
+  const raw = el.getAttribute('data-raw') || '';
+  let step = parseInt(el.getAttribute('data-fb') || '0', 10);
+  const list = driveImgFallbacks(raw || el.src);
+  step += 1;
+  if (step < list.length) {
+    el.setAttribute('data-fb', String(step));
+    el.src = list[step];
+  } else {
+    el.onerror = null;
+    el.src = 'https://via.placeholder.com/300x400?text=Image';
+  }
+}
+
+function updateImgPreview() {
+  // multi preview handled by multiImgPreview; keep safe no-op for URL field
+  const url = convertDriveUrl((document.getElementById('pImg') || {}).value || '');
+  return url;
+}
+
+async function handleImgUpload(e) {
+  const files = Array.from(e.target.files || []);
+  if (!files.length) return;
+
+  // Ajouter (pas remplacer) — max 4 au total
+  const room = 4 - pendingImageFiles.length;
+  if (room <= 0) {
+    showToast('⚠️ Maximum 4 images déjà sélectionnées');
+    e.target.value = '';
+    return;
+  }
+
+  const toAdd = [];
+  for (const f of files) {
+    if (toAdd.length >= room) break;
+    if (f.size > 12 * 1024 * 1024) {
+      showToast('⚠️ "' + f.name + '" trop grande (max 12MB) — ignorée');
+      continue;
+    }
+    toAdd.push(f);
+  }
+
+  if (!toAdd.length) {
+    e.target.value = '';
+    return;
+  }
+
+  pendingImageFiles = pendingImageFiles.concat(toAdd);
+  // reset input pour pouvoir re-sélectionner le même fichier plus tard
+  e.target.value = '';
+
+  renderPendingImgPreviews();
+  showToast('✓ +' + toAdd.length + ' photo(s) → total ' + pendingImageFiles.length + '/4');
+}
+
+function renderPendingImgPreviews() {
+  const wrap = document.getElementById('multiImgPreview');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  pendingImageFiles.forEach(function(file, idx) {
+    const box = document.createElement('div');
+    box.style.cssText = 'position:relative;width:80px;height:80px;border:1.5px solid var(--border);overflow:hidden;background:#eee;flex-shrink:0';
+    const im = document.createElement('img');
+    im.style.cssText = 'width:100%;height:100%;object-fit:cover';
+    const badge = document.createElement('span');
+    badge.textContent = String(idx + 1);
+    badge.style.cssText = 'position:absolute;top:2px;left:2px;background:var(--accent);color:#fff;font-size:10px;padding:1px 5px;font-weight:700;z-index:1';
+    const rm = document.createElement('button');
+    rm.type = 'button';
+    rm.innerHTML = '×';
+    rm.title = 'Retirer';
+    rm.style.cssText = 'position:absolute;top:2px;right:2px;width:20px;height:20px;border:none;background:#c0392b;color:#fff;font-size:14px;line-height:18px;cursor:pointer;z-index:1;padding:0';
+    rm.onclick = function(ev) {
+      ev.stopPropagation();
+      pendingImageFiles.splice(idx, 1);
+      // clear matching URL field if was filled
+      const ids = ['pImg','pImg2','pImg3','pImg4'];
+      ids.forEach(function(id) { const el = document.getElementById(id); if (el) el.value = ''; });
+      renderPendingImgPreviews();
+      showToast('Image retirée — ' + pendingImageFiles.length + '/4');
+    };
+    box.appendChild(im);
+    box.appendChild(badge);
+    box.appendChild(rm);
+    wrap.appendChild(box);
+    const reader = new FileReader();
+    reader.onload = function(ev) { im.src = ev.target.result; };
+    reader.readAsDataURL(file);
+  });
+  // bouton "ajouter encore" si < 4
+  if (pendingImageFiles.length < 4) {
+    const addBox = document.createElement('div');
+    addBox.style.cssText = 'width:80px;height:80px;border:1.5px dashed var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:22px;flex-shrink:0';
+    addBox.innerHTML = '+';
+    addBox.title = 'Ajouter une image';
+    addBox.onclick = function() { document.getElementById('imgFile').click(); };
+    wrap.appendChild(addBox);
+  }
+}
+
+/** Compresse l'image côté client (JPEG max 1200px) pour éviter les timeouts */
+function compressImageFile(file, maxSide, quality) {
+  maxSide = maxSide || 1200;
+  quality = quality || 0.82;
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w > maxSide || h > maxSide) {
+        if (w > h) { h = Math.round(h * maxSide / w); w = maxSide; }
+        else { w = Math.round(w * maxSide / h); h = maxSide; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      canvas.toBlob((blob) => {
+        if (!blob) { reject(new Error('Compression échouée')); return; }
+        resolve(new File([blob], (file.name || 'photo').replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' }));
+      }, 'image/jpeg', quality);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image invalide')); };
+    img.src = url;
+  });
+}
+
+/** Upload un File vers Drive, retourne l'URL publique ou null */
+async function uploadFileToDrive(file, productMeta) {
+  if (!CONFIG.gsUrl) throw new Error('URL Apps Script non configurée');
+  if (!CONFIG.driveFolderId) throw new Error('Folder ID Drive non configuré');
+
+  const bar = document.getElementById('uploadProgressBar');
+  const prog = document.getElementById('uploadProgress');
+  if (prog) prog.style.display = 'block';
+  if (bar) bar.style.width = '15%';
+
+  let toSend = file;
+  try {
+    toSend = await compressImageFile(file, 1000, 0.75);
+  } catch (_) { toSend = file; }
+
+  if (bar) bar.style.width = '35%';
+
+  const dataUrl = await new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(new Error('Lecture fichier impossible'));
+    r.readAsDataURL(toSend);
+  });
+
+  const base64 = String(dataUrl).split(',')[1];
+  const mimeType = toSend.type || 'image/jpeg';
+  const fileName = (Date.now() + '_' + (toSend.name || file.name || 'img.jpg')).replace(/[^a-zA-Z0-9._-]/g, '_');
+  const requestId = 'up_' + Date.now() + '_' + Math.floor(Math.random() * 1e5);
+
+  if (bar) bar.style.width = '50%';
+
+  const payload = {
+    type: 'upload_image',
+    fileName: fileName,
+    base64: base64,
+    mimeType: mimeType,
+    folderId: CONFIG.driveFolderId,
+    requestId: requestId
+  };
+  if (productMeta) {
+    payload.productId = productMeta.id;
+    payload.productName = productMeta.name;
+    payload.productCat = productMeta.cat;
+    payload.productPrice = productMeta.price;
+    payload.productOldPrice = productMeta.oldPrice || '';
+    payload.productSize = productMeta.size;
+    payload.productCond = productMeta.cond;
+    payload.productBrand = productMeta.brand;
+    payload.productBadge = productMeta.badge || '';
+    payload.productDesc = (productMeta.desc || '').substring(0, 300);
+    payload.productStatus = productMeta.status || 'active';
+    payload.dateAdded = productMeta.dateAdded || '';
+    payload.name = productMeta.name;
+    payload.id = productMeta.id;
+    payload.cat = productMeta.cat;
+    payload.price = productMeta.price;
+    payload.size = productMeta.size;
+    payload.cond = productMeta.cond;
+    payload.brand = productMeta.brand;
+    payload.status = productMeta.status || 'active';
+  }
+
+  const res = await gsPostAndWait(payload, 12);
+
+  if (bar) bar.style.width = '85%';
+
+  // Si erreur DriveApp connue
+  if (res && res.status === 'error') {
+    const msg = String(res.msg || '');
+    if (msg.indexOf('DriveApp') !== -1 || msg.indexOf('Access denied') !== -1) {
+      if (prog) prog.style.display = 'none';
+      throw new Error('Autorisez DriveApp dans Apps Script (voir instructions)');
+    }
+  }
+
+  let finalUrl = null;
+  if (res && res.status === 'ok' && res.url) {
+    finalUrl = convertDriveUrl(res.url);
+  } else {
+    try {
+      const last = await gsJsonp('get_last_upload');
+      if (last && last.upload && last.upload.url) {
+        if (!last.upload.fileName || last.upload.fileName === fileName || last.upload.requestId === requestId) {
+          finalUrl = convertDriveUrl(last.upload.url);
+        } else if (last.upload.time && Date.now() - last.upload.time < 120000) {
+          finalUrl = convertDriveUrl(last.upload.url);
+        }
+      }
+    } catch (_) {}
+  }
+
+  if (bar) bar.style.width = '100%';
+  setTimeout(() => {
+    if (prog) prog.style.display = 'none';
+    if (bar) bar.style.width = '0';
+  }, 500);
+
+  return finalUrl;
+}
+
+
+// ════════════════════════════════════════════════════════
+// ORDERS
+// ════════════════════════════════════════════════════════
+let currentOrderId = null;
+
+function orderStatusColor(st) {
+  const s = String(st || '').toLowerCase();
+  if (s.indexOf('annul') !== -1) return 'var(--danger)';
+  if (s.indexOf('livr') !== -1) return 'var(--success)';
+  if (s.indexOf('expéd') !== -1 || s.indexOf('exped') !== -1) return '#2980b9';
+  if (s.indexOf('prépar') !== -1 || s.indexOf('prepar') !== -1) return '#8e44ad';
+  if (s.indexOf('approuv') !== -1 || s.indexOf('trait') !== -1) return 'var(--success)';
+  return 'var(--warn)';
+}
+
+function renderOrders() {
+  const orders = JSON.parse(localStorage.getItem('pvOrders') || '[]');
+  document.getElementById('sbOrderCount').textContent = orders.length;
+  const el = document.getElementById('ordersList');
+  if (!el) return;
+  if (!orders.length) {
+    el.innerHTML = '<p style="color:var(--gray);font-size:13px">Aucune commande. Cliquez sur « Actualiser » pour charger depuis Sheets.</p>';
+    return;
+  }
+  const filter = (document.getElementById('orderFilterStatus') || {}).value || 'all';
+  let list = orders;
+  if (filter !== 'all') {
+    list = orders.filter(function(o) {
+      return String(o.statut || '').toLowerCase().indexOf(filter) !== -1;
+    });
+  }
+  if (!list.length) {
+    el.innerHTML = '<p style="color:var(--gray);font-size:13px">Aucune commande pour ce filtre.</p>';
+    return;
+  }
+  el.innerHTML = list.map(function(o, idx) {
+    const st = o.statut || '⏳ En attente';
+    const color = orderStatusColor(st);
+    const oid = String(o.orderId || '').replace(/'/g, "\\'");
+    return '<div style="border:1px solid var(--border);padding:16px;margin-bottom:12px;background:var(--light)">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">' +
+        '<div>' +
+          '<div style="font-size:12px;font-weight:700;letter-spacing:1px">' + (o.orderId || '—') + '</div>' +
+          '<div style="font-size:13px;color:var(--gray)">' + (o.prenom || '') + ' ' + (o.nom || '') + ' · ' + (o.telephone || '') + ' · ' + (o.ville || '') + '</div>' +
+          '<div style="font-size:12px;color:var(--accent);margin-top:4px">Total: ' + (o.total || '—') + ' · Acompte: ' + (o.acompte || '—') + '</div>' +
+        '</div>' +
+        '<span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;background:' + color + ';color:#fff;padding:4px 10px">' + st + '</span>' +
+      '</div>' +
+      '<div style="font-size:12px;color:var(--gray);margin-top:8px">Articles: ' + (o.articles || '—') + (o.taille ? ' · Taille: ' + o.taille : '') + '</div>' +
+      (o.date ? '<div style="font-size:11px;color:var(--gray);margin-top:6px">' + o.date + '</div>' : '') +
+      '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">' +
+        '<button class="btn btn-dark btn-xs" onclick="openOrderModal(\'' + oid + '\')"><i class="fas fa-eye"></i> Ouvrir / Réviser</button>' +
+        '<button class="btn btn-xs" style="background:#25D366;color:#fff;border:none" onclick="notifyClientWhatsApp(\'' + oid + '\')" title="Informer le client via WhatsApp"><i class="fab fa-whatsapp"></i> WhatsApp</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+/** Nettoie un numéro marocain pour wa.me (ex: 06... → 2126...) */
+function normalizeWhatsAppPhone(raw) {
+  if (!raw) return '';
+  let n = String(raw).replace(/[^\d+]/g, '');
+  if (n.startsWith('+')) n = n.slice(1);
+  if (n.startsWith('00')) n = n.slice(2);
+  // 06 / 07 → 2126 / 2127
+  if (/^0[67]\d{8}$/.test(n)) n = '212' + n.slice(1);
+  // déjà 212...
+  if (/^212[67]\d{8}$/.test(n)) return n;
+  // 6XXXXXXXX ou 7XXXXXXXX (9 chiffres)
+  if (/^[67]\d{8}$/.test(n)) return '212' + n;
+  // autre format international déjà ok
+  if (n.length >= 10) return n;
+  return '';
+}
+
+/** Message WhatsApp selon le statut de la commande */
+function buildWhatsAppMessage(o) {
+  const store = (CONFIG && CONFIG.storeName) ? CONFIG.storeName : 'Ayoub Clothing';
+  const prenom = (o.prenom || '').trim() || 'cher client';
+  const orderId = o.orderId || '';
+  const articles = o.articles || 'votre article';
+  const total = o.total || '';
+  const st = String(o.statut || '').toLowerCase();
+  const reason = (o.notes || '').match(/Annulation:\s*(.+)/i);
+  const cancelReason = reason ? reason[1].trim() : '';
+
+  let body = '';
+
+  if (st.indexOf('annul') !== -1) {
+    body =
+      'Bonjour ' + prenom + ' 👋\n\n' +
+      'Nous vous informons que votre commande *' + orderId + '* a été *annulée*.\n' +
+      (cancelReason ? 'Motif : ' + cancelReason + '\n' : '') +
+      '\nPour toute question, n\'hésitez pas à nous répondre.\n\n' +
+      'Cordialement,\n*' + store + '*';
+  } else if (st.indexOf('livr') !== -1) {
+    body =
+      'Bonjour ' + prenom + ' 👋\n\n' +
+      'Votre commande *' + orderId + '* a bien été *livrée* ✅\n' +
+      'Nous espérons que ' + articles + ' vous plaît !\n\n' +
+      'Merci de votre confiance.\n*' + store + '*';
+  } else if (st.indexOf('expéd') !== -1 || st.indexOf('exped') !== -1) {
+    body =
+      'Bonjour ' + prenom + ' 👋\n\n' +
+      'Bonne nouvelle ! Votre commande *' + orderId + '* est *en expédition* 📦\n' +
+      'Article(s) : ' + articles + '\n' +
+      (total ? 'Total : ' + total + '\n' : '') +
+      '\nVous serez contacté(e) par le livreur très bientôt.\n\n' +
+      'Merci,\n*' + store + '*';
+  } else if (st.indexOf('prépar') !== -1 || st.indexOf('prepar') !== -1) {
+    body =
+      'Bonjour ' + prenom + ' 👋\n\n' +
+      'Votre commande *' + orderId + '* est actuellement *en préparation* 🔧\n' +
+      'Article(s) : ' + articles + '\n\n' +
+      'Nous préparons soigneusement votre colis. Vous serez informé(e) dès l\'expédition.\n\n' +
+      'À très vite,\n*' + store + '*';
+  } else if (st.indexOf('approuv') !== -1 || st.indexOf('trait') !== -1) {
+    body =
+      'Bonjour ' + prenom + ' 👋\n\n' +
+      'Votre paiement pour la commande *' + orderId + '* a été *approuvé* ✓\n' +
+      'Article(s) : ' + articles + '\n' +
+      (total ? 'Total : ' + total + '\n' : '') +
+      '\nNous passons maintenant à la préparation de votre colis.\n\n' +
+      'Merci pour votre confiance,\n*' + store + '*';
+  } else {
+    // En attente ou autre
+    body =
+      'Bonjour ' + prenom + ' 👋\n\n' +
+      'Nous avons bien reçu votre commande *' + orderId + '* ⏳\n' +
+      'Article(s) : ' + articles + '\n' +
+      (total ? 'Total : ' + total + '\n' : '') +
+      '\nElle est en attente de validation. Nous vous tiendrons informé(e).\n\n' +
+      'Cordialement,\n*' + store + '*';
+  }
+  return body;
+}
+
+function notifyClientWhatsApp(orderId) {
+  const orders = JSON.parse(localStorage.getItem('pvOrders') || '[]');
+  const o = orders.find(function(x) { return String(x.orderId) === String(orderId); });
+  if (!o) {
+    showToast('⚠️ Commande introuvable');
+    return;
+  }
+  const phone = normalizeWhatsAppPhone(o.telephone || o.phone || '');
+  if (!phone) {
+    showToast('⚠️ Numéro WhatsApp manquant ou invalide');
+    return;
+  }
+  const msg = buildWhatsAppMessage(o);
+  const url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+  showToast('✓ WhatsApp ouvert — message selon le statut');
+}
+
+
+function openOrderModal(orderId) {
+  const orders = JSON.parse(localStorage.getItem('pvOrders') || '[]');
+  const o = orders.find(function(x) { return String(x.orderId) === String(orderId); });
+  if (!o) { showToast('⚠️ Commande introuvable'); return; }
+  currentOrderId = String(orderId);
+  document.getElementById('omId').textContent = o.orderId || '';
+  const shot = o.screenshot || '';
+  const shotUrl = shot ? convertDriveUrl(shot) : '';
+  const shotHtml = shot
+    ? ('<div style="margin-top:12px"><div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px">Screenshot paiement</div>' +
+       '<a href="' + shot + '" target="_blank" rel="noopener"><img src="' + driveImgSrc(shot) + '" data-raw="' + String(shot).replace(/"/g, '&quot;') + '" data-fb="0" referrerpolicy="no-referrer" onerror="onDriveImgError(this)" style="max-width:100%;max-height:320px;border:1px solid var(--border)"/></a>' +
+       '<div style="margin-top:6px"><a href="' + shot + '" target="_blank" style="font-size:12px">Ouvrir l\'image ↗</a></div></div>')
+    : '<div style="margin-top:12px;font-size:13px;color:var(--gray)">Aucun screenshot de paiement.</div>';
+
+  document.getElementById('omBody').innerHTML =
+    '<div class="f-grid" style="gap:10px">' +
+      '<div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)">Client</div><div style="font-size:14px;font-weight:600">' + (o.prenom || '') + ' ' + (o.nom || '') + '</div></div>' +
+      '<div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)">Téléphone</div><div style="font-size:14px">' + (o.telephone || '—') + '</div></div>' +
+      '<div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)">Email</div><div style="font-size:14px">' + (o.email || '—') + '</div></div>' +
+      '<div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)">Ville</div><div style="font-size:14px">' + (o.ville || '—') + '</div></div>' +
+      '<div style="grid-column:1/-1"><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)">Adresse</div><div style="font-size:14px">' + (o.adresse || '—') + '</div></div>' +
+      '<div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)">Articles</div><div style="font-size:14px">' + (o.articles || '—') + '</div></div>' +
+      '<div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)">Taille</div><div style="font-size:14px">' + (o.taille || '—') + '</div></div>' +
+      '<div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)">Total</div><div style="font-size:14px;font-weight:700;color:var(--accent)">' + (o.total || '—') + '</div></div>' +
+      '<div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)">Acompte</div><div style="font-size:14px">' + (o.acompte || '—') + '</div></div>' +
+      '<div style="grid-column:1/-1"><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)">Notes</div><div style="font-size:13px">' + (o.notes || '—') + '</div></div>' +
+      '<div style="grid-column:1/-1"><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)">Date</div><div style="font-size:13px">' + (o.date || '—') + '</div></div>' +
+    '</div>' + shotHtml;
+
+  const sel = document.getElementById('omStatus');
+  const st = o.statut || '⏳ En attente';
+  let matched = false;
+  for (let i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].value === st || st.indexOf(sel.options[i].value.replace(/^[^\s]+\s/, '')) !== -1) {
+      // try exact match first
+    }
+  }
+  // set by includes
+  for (let i = 0; i < sel.options.length; i++) {
+    const v = sel.options[i].value;
+    if (st === v || (st.indexOf('Annul') !== -1 && v.indexOf('Annul') !== -1) ||
+        (st.indexOf('prépar') !== -1 && v.indexOf('prépar') !== -1) ||
+        (st.indexOf('expéd') !== -1 && v.indexOf('expéd') !== -1) ||
+        (st.indexOf('Livr') !== -1 && v.indexOf('Livr') !== -1) ||
+        (st.indexOf('Approuv') !== -1 && v.indexOf('Approuv') !== -1) ||
+        (st.indexOf('attente') !== -1 && v.indexOf('attente') !== -1)) {
+      sel.selectedIndex = i;
+      matched = true;
+      break;
+    }
+  }
+  if (!matched) sel.value = '⏳ En attente';
+  document.getElementById('omCancelReason').value = '';
+  toggleCancelReason();
+  const modal = document.getElementById('orderModal');
+  modal.style.display = 'flex';
+}
+
+function closeOrderModal() {
+  document.getElementById('orderModal').style.display = 'none';
+  currentOrderId = null;
+}
+
+function toggleCancelReason() {
+  const st = document.getElementById('omStatus').value || '';
+  const wrap = document.getElementById('omCancelWrap');
+  if (wrap) wrap.style.display = st.indexOf('Annul') !== -1 ? 'block' : 'none';
+}
+
+document.addEventListener('change', function(e) {
+  if (e.target && e.target.id === 'omStatus') toggleCancelReason();
+});
+
+async function saveOrderStatus() {
+  if (!currentOrderId) return;
+  const statut = document.getElementById('omStatus').value;
+  let reason = (document.getElementById('omCancelReason').value || '').trim();
+  if (statut.indexOf('Annul') !== -1 && !reason) {
+    showToast('⚠️ Indiquez le motif d\'annulation');
+    return;
+  }
+  showToast('⏳ Mise à jour du statut...');
+  try {
+    // JSONP GET — fiable
+    const params = { orderId: currentOrderId, statut: statut };
+    if (reason) params.reason = reason;
+    const res = await gsJsonp('update_order_status', params);
+    // local update
+    const orders = JSON.parse(localStorage.getItem('pvOrders') || '[]');
+    const o = orders.find(function(x) { return String(x.orderId) === String(currentOrderId); });
+    if (o) {
+      o.statut = statut;
+      if (reason) {
+        o.notes = (o.notes ? o.notes + ' | ' : '') + 'Annulation: ' + reason;
+      }
+      localStorage.setItem('pvOrders', JSON.stringify(orders));
+    }
+    renderOrders();
+    closeOrderModal();
+    if (res && res.status === 'ok') {
+      showToast('✓ Statut mis à jour');
+    } else {
+      // fallback POST
+      await gsPost({ type: 'update_order_status', orderId: currentOrderId, statut: statut, reason: reason });
+      showToast('✓ Statut envoyé');
+    }
+  } catch (err) {
+    try {
+      await gsPost({ type: 'update_order_status', orderId: currentOrderId, statut: statut, reason: reason });
+      const orders = JSON.parse(localStorage.getItem('pvOrders') || '[]');
+      const o = orders.find(function(x) { return String(x.orderId) === String(currentOrderId); });
+      if (o) {
+        o.statut = statut;
+        if (reason) o.notes = (o.notes ? o.notes + ' | ' : '') + 'Annulation: ' + reason;
+        localStorage.setItem('pvOrders', JSON.stringify(orders));
+      }
+      renderOrders();
+      closeOrderModal();
+      showToast('✓ Statut envoyé');
+    } catch (e2) {
+      showToast('⚠️ ' + (err.message || 'Erreur mise à jour'));
+    }
+  }
+}
+
+function clearLocalOrders() {
+  if (confirm('Vider l\'historique local ?')) {
+    localStorage.removeItem('pvOrders');
+    renderOrders();
+    showToast('Historique vidé');
+  }
+}
+
+function openGS() {
+  // Ouvre le tableur si on a l'URL du script (utilisateur gère le lien sheet séparément)
+  if (CONFIG.gsUrl) {
+    // tenter d'ouvrir le script ; l'utilisateur a le sheet dans son Drive
+    window.open('https://docs.google.com/spreadsheets/', '_blank');
+  } else showToast('⚠️ URL non configurée');
+}
+
+async function fetchOrdersFromGS() {
+  if (!CONFIG.gsUrl) { showToast('⚠️ Configurez l\'URL Apps Script'); return; }
+  showToast('⏳ Chargement des commandes...');
+  try {
+    const res = await gsJsonp('get_orders');
+    if (res && res.status === 'ok' && Array.isArray(res.orders)) {
+      localStorage.setItem('pvOrders', JSON.stringify(res.orders));
+      renderOrders();
+      updateSbCounts();
+      showToast(`✓ ${res.orders.length} commande(s) importée(s)`);
+    } else {
+      showToast('⚠️ ' + (res && res.msg ? res.msg : 'Aucune donnée'));
+    }
+  } catch (err) {
+    showToast('⚠️ ' + err.message);
+  }
+}
+
+async function fetchProductsFromGS(opts) {
+  opts = opts || {};
+  const silent = !!opts.silent;
+  if (!CONFIG.gsUrl) {
+    if (!silent) showToast('⚠️ Configurez l\'URL Apps Script');
+    return false;
+  }
+  if (!silent) showToast('⏳ Chargement catalogue depuis Sheets...');
+  try {
+    const res = await gsJsonp('get_products');
+    if (res && res.status === 'ok' && Array.isArray(res.products)) {
+      products = res.products.map(function(p) {
+        return Object.assign({}, p, {
+          img: convertDriveUrl(p.img || ''),
+          img2: convertDriveUrl(p.img2 || ''),
+          img3: convertDriveUrl(p.img3 || ''),
+          img4: convertDriveUrl(p.img4 || ''),
+          status: p.status || 'active'
+        });
+      });
+      saveProducts();
+      renderAdminProds();
+      updateSbCounts();
+      if (!silent) {
+        showToast('✓ ' + products.length + ' produit(s) chargés depuis Sheets');
+      }
+      return true;
+    }
+    if (!silent) showToast('⚠️ Aucun produit dans Sheets');
+    return false;
+  } catch (err) {
+    console.warn('fetchProductsFromGS', err);
+    if (!silent) showToast('⚠️ ' + (err.message || 'Erreur chargement'));
+    return false;
+  }
+}
+
+/** Chargement auto du catalogue (sans bouton importer) */
+async function autoLoadCatalogue() {
+  if (!CONFIG.gsUrl) return;
+  try {
+    await fetchProductsFromGS({ silent: true });
+  } catch (e) {
+    console.warn('autoLoadCatalogue', e);
+  }
+}
+
+async function fetchAllFromGS() {
+  if (!CONFIG.gsUrl) { showToast('⚠️ Configurez l\'URL Apps Script'); return; }
+  showToast('⏳ Import complet...');
+  try {
+    const [cats, sz, prods, ords] = await Promise.all([
+      gsJsonp('get_categories').catch(() => null),
+      gsJsonp('get_sizes').catch(() => null),
+      gsJsonp('get_products').catch(() => null),
+      gsJsonp('get_orders').catch(() => null)
+    ]);
+    let n = 0;
+    if (cats && cats.status === 'ok' && Array.isArray(cats.categories) && cats.categories.length) {
+      categories = cats.categories;
+      saveCats(); populateCatSelects(); renderCatList(); n++;
+    }
+    if (sz && sz.status === 'ok' && Array.isArray(sz.sizes) && sz.sizes.length) {
+      sizes = sz.sizes;
+      saveSizes(); populateSizeSelects(); renderSizes(); n++;
+    }
+    if (prods && prods.status === 'ok' && Array.isArray(prods.products) && prods.products.length) {
+      products = prods.products.map(p => ({
+        ...p,
+        id: p.id || Date.now() + Math.random(),
+        status: p.status === 'actif' ? 'active' : (p.status || 'active'),
+        oldPrice: p.oldPrice || null,
+        badge: p.badge || null
+      }));
+      saveProducts(); renderAdminProds(); n++;
+    }
+    if (ords && ords.status === 'ok' && Array.isArray(ords.orders)) {
+      localStorage.setItem('pvOrders', JSON.stringify(ords.orders));
+      renderOrders(); n++;
+    }
+    updateSbCounts();
+    showToast(n ? `✓ Import terminé (${n} source(s))` : '⚠️ Rien à importer');
+  } catch (err) {
+    showToast('⚠️ ' + err.message);
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// GOOGLE SHEETS SYNC (push)
+// ════════════════════════════════════════════════════════
+async function syncCatsToGS() {
+  if (!CONFIG.gsUrl) return;
+  const list = categories.map(c => ({
+    slug: c.slug, name: c.name, icon: c.icon || '', color: c.color || '',
+    count: products.filter(p => p.cat === c.slug && p.status !== 'sold').length
+  }));
+  try {
+    await gsJsonp('sync_categories', { data: JSON.stringify(list) });
+  } catch (_) {
+    await gsPost({ type: 'sync_categories', categories: list });
+  }
+}
+
+async function syncSizesToGS() {
+  if (!CONFIG.gsUrl) return;
+  const sizesData = sizes.map(s => ({
+    name: s,
+    products: products.filter(p => p.size === s).map(p => p.name).join(', '),
+    count: products.filter(p => p.size === s).length
+  }));
+  try {
+    await gsJsonp('sync_sizes', { data: JSON.stringify(sizesData) });
+  } catch (_) {
+    await gsPost({ type: 'sync_sizes', sizes: sizesData });
+  }
+}
+
+async function syncProductToGS(p) {
+  if (!CONFIG.gsUrl) return { status: 'error', msg: 'no_url' };
+  let imgUrl = convertDriveUrl(p.img || '');
+  let img2 = convertDriveUrl(p.img2 || '');
+  let img3 = convertDriveUrl(p.img3 || '');
+  let img4 = convertDriveUrl(p.img4 || '');
+  if (!imgUrl) {
+    try {
+      const last = await gsJsonp('get_last_upload');
+      if (last && last.upload && last.upload.url) imgUrl = convertDriveUrl(last.upload.url);
+    } catch (_) {}
+  }
+  if (!imgUrl && CONFIG.driveFolderId) {
+    try {
+      const fl = await gsJsonp('get_folder_latest', { folderId: CONFIG.driveFolderId });
+      if (fl && fl.upload && fl.upload.url) imgUrl = convertDriveUrl(fl.upload.url);
+    } catch (_) {}
+  }
+  p.img = imgUrl || '';
+  p.img2 = img2 || '';
+  p.img3 = img3 || '';
+  p.img4 = img4 || '';
+  const payload = {
+    id: String(p.id || ''),
+    name: p.name || '',
+    cat: p.cat || '',
+    price: p.price || 0,
+    oldPrice: p.oldPrice || '',
+    size: p.size || '',
+    cond: p.cond || '',
+    brand: p.brand || '',
+    badge: p.badge || '',
+    desc: (p.desc || '').substring(0, 400),
+    img: p.img,
+    img2: p.img2,
+    img3: p.img3,
+    img4: p.img4,
+    status: p.status || 'active',
+    dateAdded: p.dateAdded || new Date().toLocaleString('fr-MA')
+  };
+  try {
+    const res = await gsJsonp('sync_product', {
+      data: JSON.stringify(payload),
+      id: payload.id,
+      name: payload.name,
+      cat: payload.cat,
+      price: String(payload.price),
+      oldPrice: String(payload.oldPrice || ''),
+      size: payload.size,
+      cond: payload.cond,
+      brand: payload.brand,
+      badge: String(payload.badge || ''),
+      desc: payload.desc,
+      img: payload.img,
+      img2: payload.img2,
+      img3: payload.img3,
+      img4: payload.img4,
+      status: payload.status,
+      dateAdded: payload.dateAdded
+    });
+    if (res && res.status === 'ok') {
+      if (res.img) p.img = convertDriveUrl(res.img);
+      if (res.img2) p.img2 = convertDriveUrl(res.img2);
+      if (res.img3) p.img3 = convertDriveUrl(res.img3);
+      if (res.img4) p.img4 = convertDriveUrl(res.img4);
+      return res;
+    }
+    await gsPost(Object.assign({ type: 'sync_product' }, payload));
+    return res || { status: 'ok' };
+  } catch (err) {
+    console.warn('syncProductToGS', err);
+    try {
+      await gsPost(Object.assign({ type: 'sync_product' }, payload));
+      return { status: 'ok', note: 'post_fallback' };
+    } catch (e2) {
+      return { status: 'error', msg: String(err.message || err) };
+    }
+  }
+}
+
+async function syncToShop() {
+  if (!CONFIG.gsUrl) { showToast('⚠️ Configurez l\'URL Apps Script'); return; }
+  showToast('⏳ Synchronisation...');
+  try {
+    await syncCatsToGS();
+    await syncSizesToGS();
+    let ok = 0;
+    for (const p of products) {
+      const r = await syncProductToGS(p);
+      if (r && r.status === 'ok') ok++;
+    }
+    showToast('✓ Sync terminée: ' + ok + '/' + products.length + ' produits');
+  } catch (err) {
+    showToast('⚠️ Erreur sync: ' + (err.message || ''));
+  }
+}
+
+async function testGS() {
+  if (!CONFIG.gsUrl) { showToast('⚠️ gsUrl manquant dans config.json'); return; }
+  showToast('⏳ Test connexion...');
+  try {
+    const res = await gsJsonp('ping');
+    if (res && res.status === 'connected') {
+      showToast('✓ Connexion OK — ' + (res.time || ''));
+    } else {
+      showToast('⚠️ Réponse invalide');
+    }
+  } catch (e) {
+    showToast('⚠️ ' + e.message);
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// PAYMENT PREVIEW
+// ════════════════════════════════════════════════════════
+function updatePayPreview(){ /* legacy UI removed — use config.json */ }
+
+// ════════════════════════════════════════════════════════
+// THEME
+// ════════════════════════════════════════════════════════
+function applyPalette(name){ /* theme UI removed — edit config.json */ }
+
+// ════════════════════════════════════════════════════════
+// SHEET TABS PREVIEW
+// ════════════════════════════════════════════════════════
+const sheetPreviews = {
+  commandes:`<table class="sheet-table"><thead><tr><th>Date/Heure</th><th>N° Commande</th><th>Prénom</th><th>Nom</th><th>Téléphone</th><th>Ville</th><th>Articles</th><th>Total</th><th>Statut</th></tr></thead><tbody><tr><td>01/01/2025</td><td>PV-ABC123</td><td>Mohammed</td><td>Alaoui</td><td>0612345678</td><td>Casablanca</td><td>Veste en Jean ×1</td><td>249 MAD</td><td>⏳ En attente</td></tr></tbody></table>`,
+  categories:`<table class="sheet-table"><thead><tr><th>Slug</th><th>Nom</th><th>Icône</th><th>Nb Produits</th></tr></thead><tbody>${categories.map(c=>`<tr><td>${c.slug}</td><td>${c.name}</td><td>${c.icon||'—'}</td><td>${products.filter(p=>p.cat===c.slug).length}</td></tr>`).join('')}</tbody></table>`,
+  tailles:`<table class="sheet-table"><thead><tr><th>Taille</th><th>Produits</th><th>Nb</th></tr></thead><tbody>${sizes.map(s=>`<tr><td>${s}</td><td>${products.filter(p=>p.size===s).map(p=>p.name).join(', ')||'—'}</td><td>${products.filter(p=>p.size===s).length}</td></tr>`).join('')}</tbody></table>`,
+  produits:`<table class="sheet-table"><thead><tr><th>Nom</th><th>Catégorie</th><th>Prix</th><th>Taille</th><th>État</th><th>Statut</th></tr></thead><tbody>${products.slice(0,5).map(p=>`<tr><td>${p.name}</td><td>${p.cat}</td><td>${p.price} MAD</td><td>${p.size}</td><td>${p.cond}</td><td>${p.status}</td></tr>`).join('')}</tbody></table>`,
+  newsletter:`<table class="sheet-table"><thead><tr><th>Date</th><th>Email</th></tr></thead><tbody><tr><td>01/01/2025</td><td>client@email.com</td></tr></tbody></table>`
+};
+function showSheetTab(id, btn){
+  const el = document.getElementById('sheetPreviewContent');
+  if (!el) return;
+  document.querySelectorAll('.sheet-tab').forEach(b=>b.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  document.getElementById('sheetPreviewContent').innerHTML=sheetPreviews[id]||'';
+}
+
+// ════════════════════════════════════════════════════════
+// SIDEBAR COUNTS
+// ════════════════════════════════════════════════════════
+function updateSbCounts(){
+  document.getElementById('sbProdCount').textContent=products.filter(p=>p.status==='active').length;
+  const orders=JSON.parse(localStorage.getItem('pvOrders')||'[]');
+  document.getElementById('sbOrderCount').textContent=orders.length;
+}
+
+// ════════════════════════════════════════════════════════
+// MISC
+// ════════════════════════════════════════════════════════
+function showSaved(id){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2800);
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+function copyCode(){
+  const el=document.getElementById('gsCode');
+  if(!el){ showToast('Code Apps Script : voir AyoubClothing-AppsScript-v4.js'); return; }
+  navigator.clipboard.writeText(el.textContent).then(()=>showToast('✓ Code copié !'));
+}
+
+// ════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded',()=>{
+  initAdminLock();
+  loadConfigJson();
+  setTimeout(function(){ autoLoadCatalogue(); }, 400);
+  populateCatSelects();
+  populateSizeSelects();
+  renderAdminProds();
+  renderCatList();
+  renderSizes();
+  renderOrders();
+  updateSbCounts();
+  const uz=document.getElementById('uploadZone');
+  if(uz){
+    uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
+    uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
+    uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f){handleImgUpload({target:{files:e.dataTransfer.files}}); }});
+  }
+});
+</script>
+</body>
+</html>
